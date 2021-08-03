@@ -1,0 +1,80 @@
+﻿@using SimpleMVC.Models
+@model IEnumerable<Book>
+
+@{
+    ViewBag.Title = "Main";
+}
+
+<div class="row">
+
+    <div class="col-md-12">
+        <h2>Book sale</h2>
+        <p>
+            <a class="btn btn-sm btn-primary" href="/Home/Create/">Create</a>
+        </p>
+        <table class="table table-striped">
+            <tr>
+                <td><p>Book name</p></td>
+                <td><p>Author</p></td>
+                <td><p>Price</p></td>
+                <td class="text-center" colspan="2"></td>
+            </tr>
+            @foreach (var book in Model)
+            {
+                <tr>
+                    <td><p>@book.Name</p></td>
+                    <td><p>@book.Author</p></td>
+                    <td><p>@book.Price</p></td>
+                    <td><p><a class="btn btn-xs btn-primary" href="/Home/Edit/@book.Id">Edit</a></p></td>
+                    <td><p><button class="btn btn-xs btn-danger" onclick="DeleteConfirmation(@book.Id, '@book.Name', '@book.Author')">Delete</button></p></td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>
+
+<div class="modal fade" id="delete-conformation" tabindex="-1" role="dialog" aria-labelledby="deleteconformation">
+    <div class="modal-dialog" style="width:501px !important;margin:0 auto;">
+        <div class="modal-content">
+            <div class="modal-header" style="background:#d9534f;color:white;">
+                <h4 class="modal-title" id="delete-conformation">
+                    Delete Confirmation
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <span>
+                                Are you sure you want to delete?
+                            </span>
+                            <br />
+                            <strong id="deletedId" class="hidden">
+                            </strong>
+                            <strong id="deletedBookName">
+                            </strong>
+                            <strong id="deletedBookAuthor">
+                            </strong>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <a id="deleteLink" href="#" class="btn btn-danger">Delete</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        var DeleteConfirmation = function (id, name, author) {
+            $('#deletedBookName').text(name);
+            $('#deletedBookAuthor').text(author);
+            $('#deleteLink').attr("href", "@Url.Action("Delete", "Home")" + '/' + id);
+            $('#delete-conformation').modal('show');
+        }
+    </script>
+}
