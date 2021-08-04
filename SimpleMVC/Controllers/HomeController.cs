@@ -7,18 +7,19 @@ using System.Web.Mvc;
 
 namespace SimpleMVC.Controllers
 {
+    [CustomExceptionFilter]
     public class HomeController : Controller
     {
-        private UnitOfWork uow;
+        private UnitOfWork UOW { get; }
 
         public HomeController()
         {
-            uow = new UnitOfWork();
+            UOW = new UnitOfWork();
         }
 
         public ActionResult Index()
         {
-            return View(uow.Books.GetAll());
+            return View(UOW.Books.GetAll());
         }
 
         public ActionResult Create()
@@ -31,8 +32,8 @@ namespace SimpleMVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                uow.Books.Create(book);
-                uow.Save();
+                UOW.Books.Create(book);
+                UOW.Save();
                 return RedirectToAction(nameof(Index));
             }
             return View(book);
@@ -42,7 +43,7 @@ namespace SimpleMVC.Controllers
         {
             if (id.HasValue && id.Value > 0)
             {
-                var book = uow.Books.Get(id.Value);
+                var book = UOW.Books.Get(id.Value);
                 if (book != null)
                 {
                     return View(book);
@@ -57,8 +58,8 @@ namespace SimpleMVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                uow.Books.Update(book);
-                uow.Save();
+                UOW.Books.Update(book);
+                UOW.Save();
                 return RedirectToAction(nameof(Index));
             }
             return View(book);
@@ -68,8 +69,8 @@ namespace SimpleMVC.Controllers
         {
             if (id.HasValue && id.Value > 0)
             {
-                uow.Books.Delete(id.Value);
-                uow.Save();
+                UOW.Books.Delete(id.Value);
+                UOW.Save();
                 return RedirectToAction(nameof(Index));
             }
             return HttpNotFound();
@@ -77,7 +78,7 @@ namespace SimpleMVC.Controllers
 
         protected override void Dispose(bool disposing)
         {
-            uow.Dispose();
+            UOW.Dispose();
             base.Dispose(disposing);
         }
     }
